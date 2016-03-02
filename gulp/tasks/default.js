@@ -1,11 +1,13 @@
 var gulp = require('gulp'),
     $ = require('gulp-load-plugins')(),
-    conf = require('../config').default;
+    conf = require('../config'),
+    def = conf.default,
+    beforeTask = def.buildBefore;
 
-gulp.task('default', function() {
-  var val;
-  for (prop in conf) {
-    if (conf[prop] === true) {
+// タスク処理まえに実行しておくタスクを指定
+gulp.task('default', beforeTask, function() {
+  for (var prop in def.tasks) {
+    if (def.tasks[prop] === true) {
       gulp.start([prop]);
     }
   }

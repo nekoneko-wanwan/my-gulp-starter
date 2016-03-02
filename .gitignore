@@ -1,3 +1,6 @@
 .git
+.sftpconfig.json
 node_modules/
 sass-cache/
+html/*
+!.gitkeep
