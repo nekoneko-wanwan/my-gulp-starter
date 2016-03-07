@@ -1,6 +1,6 @@
 var gulp = require('gulp'),
-    $ = require('gulp-load-plugins')(),
-    fs = require('fs'),
+    $    = require('gulp-load-plugins')(),
+    fs   = require('fs'),
     conf = require('../config').sftp,
     loadJsonSync = function(filename) {
       return JSON.parse(fs.readFileSync(filename, 'utf8'));
@@ -8,6 +8,6 @@ var gulp = require('gulp'),
 
 gulp.task(conf.taskName, function() {
   // 設定ファイルの読み込み
-  var sftpConf = loadJsonSync(conf.confFile);
+  var sftpConf = loadJsonSync(conf.serverInfo);
   return gulp.src(conf.localPath).pipe($.sftp(sftpConf));
 });

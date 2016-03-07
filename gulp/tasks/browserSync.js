@@ -1,11 +1,17 @@
-var gulp = require('gulp'),
+var gulp        = require('gulp'),
     browserSync = require('browser-sync').create(),
-    ssi = require('browsersync-ssi'),
-    conf = require('../config'),
-    bs = conf.browserSync;
+    ssi         = require('browsersync-ssi'),
+    conf        = require('../config'),
+    bs          = conf.browserSync;
 
 // Server build
 gulp.task(bs.taskName, function() {
+  // proxyモードであればそのままbuildして終了
+  if (bs.proxy.use === true) {
+    browserSync.init(bs.proxy);
+    return;
+  }
+
   // init.serverのプロパティに追加するmiddlewareオプションの設定
   var serverMiddleware = function() {
     var middleware = [
@@ -20,14 +26,9 @@ gulp.task(bs.taskName, function() {
     }
     return middleware;
   };
-
-  if (bs.proxy.use === true) {
-    browserSync.init(bs.proxy);
-  } else {
-    // initにデータを追加更新
-    bs.init.server['middleware'] = serverMiddleware();
-    browserSync.init(bs.init);
-  }
+  // initにデータを追加更新
+  bs.init.server['middleware'] = serverMiddleware();
+  browserSync.init(bs.init);
 });
 
 // Server liveReload

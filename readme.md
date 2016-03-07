@@ -9,22 +9,9 @@
 更新ファイルをsftpで外部サーバへアップロードし、完了後のタイミングでリロードさせたい
 
 - browserSync > proxyをtrueにして該当するアドレスを設定
-- config > watch > sftpとreloadをtrueに
-- browserSync.jsのliveReloadタスクに、sftpのタスク名を第二引数で渡す
-
-```exsample.js
-gulp.task(bs.liveReload.taskName, [conf.sftp.taskName] function() {
-  browserSync.reload();
-});
-```
+- config > watch > useSubTaskName > 'watch-sass-jade-sftp'を指定
 
 **proxyを通しているだけなので、あくまでブラウザではlocalhost:portにアクセスする（open:true で自動で開く）**  
 
-> なお上記の場合ファイルは一括でまとめてアップしているので、処理が重たくなったら対象ファイルを減らすか、更新ファイルのみアップするようタスクを調整する
-
-
-# 備考
-
-- watch.tasks, default.tasksのプロパティは各taskNameをそのまま指定しているため、変更した場合はここも変える
-- 各タスクの依存関係は考慮していないので、指定とタイミングによっては無駄なタスクが処理される可能性がある
-- タスクは必要に応じて細かく調整すること
+> なおwindows？の場合、リモート側にアップしようとするディレクトリが無いと上手くSFTPアップロードが効かない。  
+> 手動でディレクトリを作成するか、sftp:allタスクで一括アップしてやる

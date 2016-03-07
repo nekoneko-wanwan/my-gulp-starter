@@ -1,11 +1,14 @@
 var baseConf = {
       srcDir: 'src/',
-      distDir: 'html/'
+      distDir: 'html/',
+      sftpconfig: './.sftpconfig.json'  // SFTPを使用する場合のサーバの接続情報
     };
 
 // プロパティは変更不可
 module.exports = {
-  // meta css
+  /************************************************
+   * sass
+   ************************************************/
   sass: {
     taskName: 'sass',
     src:  baseConf.srcDir + 'scss/**/*.scss',
@@ -20,14 +23,17 @@ module.exports = {
       cascade: false
     },
     csscomb: false,
-    // sassファイルをdestとは別にコピーする
+    // sassファイルをdestとは別にコピーしたいときに使用
     srcCopy: {
       use: false,
       dest: baseConf.distDir + 'common/scss/'
     }
   },
 
-  // html template
+
+  /************************************************
+   * jade
+   ************************************************/
   jade: {
     taskName: 'jade',
     src: [
@@ -40,7 +46,10 @@ module.exports = {
     }
   },
 
-  // static server, or proxy server
+
+  /************************************************
+   * static server, or proxy server
+   ************************************************/
   browserSync: {
     taskName: 'server',
     init: {
@@ -60,13 +69,13 @@ module.exports = {
     },
     // use: trueでinit, ssiは無視される
     proxy: {
-      use: false,
-      open: true,
+      use: true,
+      proxy: "192.168.33.40/php/test/",  // .sftpconfig.jsonのremotePathと合わせる
+      open: false,
       notify: false,
-      port: 9999,
-      proxy: "www.yahoo.co.jp/"
+      port: 9999
     },
-    // ライブリロードは単体では実行不可（watchタスク内で使用する）
+    // ライブリロードはwatchタスク内で使用
     reload: {
       taskName: 'reload',
       watchPath: [
@@ -77,24 +86,31 @@ module.exports = {
     }
   },
 
-  // sftp
-  // サーバの接続情報は.sftpconfig.jsonで管理する
+
+  /************************************************
+   * SFTP関係
+   ************************************************/
+  // ドキュメントルート以下を全てSFTPアップロード
   sftp: {
-    taskName: 'sftp',
-    // watch対象
-    watchPath: [
-      baseConf.distDir + '**'
-      // 対象から外す記述サンプル
-      // '!' + baseConf.distDir + '**/*.html'
-    ],
-    // アップするファイル群
+    taskName: 'sftp:all',
+    serverInfo: baseConf.sftpconfig,
     localPath: [
       baseConf.distDir + '**'
-    ],
-    confFile: './.sftpconfig.json'
+    ]
   },
 
-  // コンパイルされたものをまとめて削除するのに使う
+  // 差分sftp + liveReload
+  // watch内でのみ使用を想定しているため、タスクとして単独実行できない
+  // 監視対象はライブリロードのwatchPathを流用（その中で更新されたファイルがアップロード
+  sftpReload: {
+    serverInfo: baseConf.sftpconfig,
+    baseDir: baseConf.distDir
+  },
+
+
+  /************************************************
+   * コンパイルされたものをまとめて削除
+   ************************************************/
   // 依存関係は考慮していないため、watchやdefaultで使用するとtargetPathがwatch対象から外れることがある
   // clean->watch->sassでファイルが再生成のケースだと、watch時に対象が見つからない
   clean: {
@@ -105,29 +121,30 @@ module.exports = {
     ]
   },
 
-  // file watching
+
+  /************************************************
+   * watch
+   ************************************************/
+  // 細かく条件を変えたいため、watch.js内で更にタスクを定義
   watch: {
     taskName: 'watch',
-    // 各taskNameをプロパティに指定
-    tasks: {
-      sass: true,
-      jade: false,
-      sftp: false,
-      reload: true
-    }
+    useWatchTaskName: 'watch-sass'  // watch.jsで設定した小タスクを指定
   },
 
-  // CLI -> gulp
+
+  /************************************************
+   * default
+   ************************************************/
   default: {
     // tasks前に処理したいタスクをtaskNameで指定
-    buildBefore: ['server'],
+    beforeTask: ['server'],
 
     // 依存関係は考慮していないのでタイミングによっては無駄なタスクが走る場合がある
     // 各taskNameをプロパティに指定
     tasks: {
-      sass: true,
+      sass: false,
       jade: false,
-      sftp: false,
+      'sftp:all': false,
       watch: true
     }
   }

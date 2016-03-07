@@ -1,5 +1,5 @@
 var gulp = require('gulp'),
-    $ = require('gulp-load-plugins')(),
+    $    = require('gulp-load-plugins')(),
     conf = require('../config').clean;
 
 gulp.task(conf.taskName, function () {

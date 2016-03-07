@@ -1,8 +1,8 @@
 var gulp = require('gulp'),
-    $ = require('gulp-load-plugins')(),
+    $    = require('gulp-load-plugins')(),
     conf = require('../config'),
-    def = conf.default,
-    beforeTask = def.buildBefore;
+    def  = conf.default,
+    beforeTask = def.beforeTask;
 
 // タスク処理まえに実行しておくタスクを指定
 gulp.task('default', beforeTask, function() {

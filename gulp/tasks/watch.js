@@ -1,49 +1,81 @@
 var gulp = require('gulp'),
-    $ = require('gulp-load-plugins')(),
+    $    = require('gulp-load-plugins')(),
+    fs   = require('fs'),
+    path = require('path'),
     conf = require('../config'),
-    w = conf.watch;
+    w    = conf.watch,
+    loadJsonSync = function(filename) {
+      return JSON.parse(fs.readFileSync(filename, 'utf8'));
+    };
 
-// Use 'gulp-watch' package (watching for after new files)
-// Run all task watch
+
+/************************************************
+ * watchのパターンごとにタスクを作成
+ ************************************************/
+
+
+/************************************************
+* sassのコンパイルとライブリロード
+************************************************/
+gulp.task('watch-sass', function() {
+  $.watch(conf.sass.src, function() {
+    gulp.start([conf.sass.taskName]);
+  });
+  $.watch(conf.browserSync.reload.watchPath, function() {
+    gulp.start([conf.browserSync.reload.taskName]);
+  });
+});
+
+
+/************************************************
+* sass, jadeのコンパイルとライブリロード
+************************************************/
+gulp.task('watch-sass-jade', function() {
+  $.watch(conf.sass.src, function() {
+    gulp.start([conf.sass.taskName]);
+  });
+  $.watch(conf.jade.src, function() {
+    gulp.start([conf.jade.taskName]);
+  });
+  $.watch(conf.browserSync.reload.watchPath, function() {
+    gulp.start([conf.browserSync.reload.taskName]);
+  });
+});
+
+
+/************************************************
+* sass, jadeのコンパイルとSFTPによる差分アップデートおよびライブリロード
+************************************************/
+gulp.task('watch-sass-jade-sftp', function() {
+  $.watch(conf.sass.src, function() {
+    gulp.start([conf.sass.taskName]);
+  });
+  $.watch(conf.jade.src, function() {
+    gulp.start([conf.jade.taskName]);
+  });
+
+  // 監視対象に変更があったらSFTPでアップしてからリロード
+  // 複数ファイルが同時に変更されたらリロードのタイミングはズレるかも
+  gulp.watch(conf.browserSync.reload.watchPath, function(e) {
+    // 変更ファイルのpathを取得
+    // c:/Users/...始まりだが動作に影響はないためこのまま
+    var localPath  = e.path;
+
+    // アップロード先のpathを取得
+    // sftpconfig.jsonのremotePathに追加する前提
+    // そのためベースディレクトリ以下からファイルまでのディレクトリ名を取得（ベースディレクトリを除く）
+    // ディレクトリを指定するためファイル名（最後の/以下）は削除する
+    var remotePath = path.relative(conf.sftpReload.baseDir, path.dirname(e.path)).replace(/\\/g, '/') + '/';
+
+    var sftp = require('./sftpReload.js');
+    sftp(localPath, remotePath);
+  });
+});
+
+
+/************************************************
+* configで指定した小タスクをwatchタスクとして実行
+************************************************/
 gulp.task(w.taskName, function() {
-  for (var prop in w.tasks) {
-    // false時はスルー
-    if (w.tasks[prop] === false) {
-      continue;
-    }
-
-    // タスクによって処理を変更する
-    switch (prop) {
-      // sass
-      case conf.sass.taskName:
-        $.watch(conf.sass.src, function() {
-          gulp.start([conf.sass.taskName]);
-        });
-        break;
-
-      // jade
-      case conf.jade.taskName:
-        $.watch(conf.jade.src, function() {
-          gulp.start([conf.jade.taskName]);
-        });
-        break;
-
-      // sftp
-      case conf.sftp.taskName:
-        $.watch(conf.sftp.watchPath, function() {
-          gulp.start([conf.sftp.taskName]);
-        });
-        break;
-
-      // liveReload
-      case conf.browserSync.reload.taskName:
-        gulp.watch(conf.browserSync.reload.watchPath, function() {
-          gulp.start([conf.browserSync.reload.taskName]);
-        });
-        break;
-
-      default:
-        break;
-    }
-  }
+  gulp.start([w.useWatchTaskName]);
 });
