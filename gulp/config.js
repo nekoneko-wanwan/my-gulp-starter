@@ -16,7 +16,7 @@ module.exports = {
     sassOption: {
       style: 'expanded',  // nested, expanded, compact, compressed
       stopOnError: false,
-      cacheLocation: './sass-cache'  // 最上位のgulpfile.jsから見た位置になる
+      cacheLocation: './.sass-cache'  // 最上位のgulpfile.jsから見た位置になる
     },
     autoprefixer: {
       browsers: ['last 2 versions', 'ie 9', 'ios 6', 'android 4'],
