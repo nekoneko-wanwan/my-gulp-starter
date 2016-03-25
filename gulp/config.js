@@ -32,6 +32,29 @@ module.exports = {
 
 
   /************************************************
+   * kss guide
+   * watchには含めない（sassでコンパイルされたcssを直接見ているので手でリロードすれば反映される）
+   ************************************************/
+  guide: {
+    taskName: 'guide',
+    cmd: [
+      // kss-node compile
+      'kss-node <%= source %> --homepage <%= mdFile%> <%= destination %> --template <%= template%> --css <%= cssfile %>',
+      // kss用server build (my-gulp-starterがドキュメントルートとなる)
+      // 'localhost/kss/html/'にアクセスするとスタイルガイドが見れる
+      'http-server -p 9000 --silent'
+    ],
+    templateData: {
+      source: baseConf.srcDir + 'scss/',
+      destination: './kss/html/',
+      template: './kss/template/',
+      mdFile: '../../kss/styleguide-intro.md',
+      cssfile: '/' + baseConf.distDir + 'common/css/style.css'  // sassコンパイルされたcssをmy-gulp-starterからの絶対パスで読み込む
+    }
+  },
+
+
+  /************************************************
    * jade
    ************************************************/
   jade: {
@@ -69,7 +92,7 @@ module.exports = {
     },
     // use: trueでinit, ssiは無視される
     proxy: {
-      use: true,
+      use: false,
       proxy: "192.168.33.40/php/test/",  // .sftpconfig.jsonのremotePathと合わせる
       open: false,
       notify: false,
@@ -142,7 +165,8 @@ module.exports = {
     // 依存関係は考慮していないのでタイミングによっては無駄なタスクが走る場合がある
     // 各taskNameをプロパティに指定
     tasks: {
-      sass: false,
+      sass: true,
+      guide: true,
       jade: false,
       'sftp:all': false,
       watch: true

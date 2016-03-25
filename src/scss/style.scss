@@ -1,5 +1,28 @@
 @charset "UTF-8";
 
-div {
-  display: block;
-}
+// Color
+// 
+// ・プロジェクトで使用する基本色のデモ<br>
+// ・**モジュール・スタイルにも影響**する<br>
+// ・変数名はscssファイルを参考<br>
+// ・以下表示されるclass名はガイドのために用意したものなので実際には使用しない
+//
+// Styleguide: demo1
+
+// Project Color
+//
+// - main: メインカラー
+// - sub: サブカラー
+// - base: ベースカラー（多くの場合、無彩色）
+// - accent: アクセントカラー（多くの場合、彩度の高い色。複数可）
+// - link: リンクカラー
+//
+// Markup:
+// <div class="demo-color-style main"></div>
+// <div class="demo-color-style sub"></div>
+// <div class="demo-color-style base"></div>
+// <div class="demo-color-style accent"></div>
+// <div class="demo-color-style link"></div>
+//
+// Styleguide: demo1.color
+
