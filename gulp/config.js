@@ -1,8 +1,21 @@
 var baseConf = {
       srcDir: 'src/',
       distDir: 'html/',
+      taskName: {
+        sass: 'sass',
+        kssGuide: 'guide',
+        jade: 'jade',
+        bsServer: 'server',
+        bsReload: 'reload',
+        sftp: 'sftp:all',
+        clean: 'clean',
+        watch: 'watch',
+      },
       sftpconfig: './.sftpconfig.json'  // SFTPを使用する場合のサーバの接続情報
     };
+// ショートハンド
+var n = baseConf.taskName;
+
 
 // プロパティは変更不可
 module.exports = {
@@ -10,7 +23,7 @@ module.exports = {
    * sass
    ************************************************/
   sass: {
-    taskName: 'sass',
+    taskName: n.sass,
     src:  baseConf.srcDir + 'scss/**/*.scss',
     dest: baseConf.distDir + 'common/css/',
     sassOption: {
@@ -36,7 +49,7 @@ module.exports = {
    * watchには含めない（sassでコンパイルされたcssを直接見ているので手でリロードすれば反映される）
    ************************************************/
   guide: {
-    taskName: 'guide',
+    taskName: n.kssGuide,
     cmd: [
       // kss-node compile
       'kss-node <%= source %> --homepage <%= mdFile%> <%= destination %> --template <%= template%> --css <%= cssfile %>',
@@ -58,7 +71,7 @@ module.exports = {
    * jade
    ************************************************/
   jade: {
-    taskName: 'jade',
+    taskName: n.jade,
     src: [
       baseConf.srcDir + 'jade/**/*.jade',
       "!" + baseConf.srcDir + 'jade/**/_*.jade' // partialファイルを除外
@@ -74,7 +87,7 @@ module.exports = {
    * static server, or proxy server
    ************************************************/
   browserSync: {
-    taskName: 'server',
+    taskName: n.bsServer,
     init: {
       server: {
         // middlewareはbrowserSync.jsの方で管理（ほぼ変更がないため）
@@ -100,7 +113,7 @@ module.exports = {
     },
     // ライブリロードはwatchタスク内で使用
     reload: {
-      taskName: 'reload',
+      taskName: n.bsReload,
       watchPath: [
         baseConf.distDir + '**/*.html',
         baseConf.distDir + '**/*.css',
@@ -115,7 +128,7 @@ module.exports = {
    ************************************************/
   // ドキュメントルート以下を全てSFTPアップロード
   sftp: {
-    taskName: 'sftp:all',
+    taskName: n.sftp,
     serverInfo: baseConf.sftpconfig,
     localPath: [
       baseConf.distDir + '**'
@@ -137,7 +150,7 @@ module.exports = {
   // 依存関係は考慮していないため、watchやdefaultで使用するとtargetPathがwatch対象から外れることがある
   // clean->watch->sassでファイルが再生成のケースだと、watch時に対象が見つからない
   clean: {
-    taskName: 'clean',
+    taskName: n.clean,
     targetPath: [
       baseConf.distDir + 'common/scss/',
       baseConf.distDir + 'common/css/'
@@ -150,7 +163,7 @@ module.exports = {
    ************************************************/
   // 細かく条件を変えたいため、watch.js内で更にタスクを定義
   watch: {
-    taskName: 'watch',
+    taskName: n.watch,
     useWatchTaskName: 'watch-sass'  // watch.jsで設定した小タスクを指定
   },
 
@@ -159,17 +172,16 @@ module.exports = {
    * default
    ************************************************/
   default: {
-    // tasks前に処理したいタスクをtaskNameで指定
-    beforeTask: ['server'],
-
+    // 各taskNameはES6記法で簡潔に指定している
+    // tasks前に処理したいタスクを指定
+    beforeTask: [n.bsServer],
     // 依存関係は考慮していないのでタイミングによっては無駄なタスクが走る場合がある
-    // 各taskNameをプロパティに指定
     tasks: {
-      sass: true,
-      guide: true,
-      jade: false,
-      'sftp:all': false,
-      watch: true
+      [n.sass]: true,
+      [n.kssGuide]: true,
+      [n.jade]: false,
+      [n.sftp]: false,
+      [n.watch]: true
     }
   }
 };
