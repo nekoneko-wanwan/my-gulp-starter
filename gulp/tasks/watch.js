@@ -15,13 +15,11 @@ var gulp = require('gulp'),
 
 
 /************************************************
-* - sassのコンパイル
-* - styleguideの生成
-* - ライブリロード
+* sassのコンパイルとライブリロード
 ************************************************/
 gulp.task('watch-sass', function() {
   $.watch(conf.sass.src, function() {
-    gulp.start([conf.sass.taskName, conf.sass.styleguide.taskName.base]);
+    gulp.start([conf.sass.taskName]);
   });
   $.watch(conf.browserSync.reload.watchPath, function() {
     gulp.start([conf.browserSync.reload.taskName]);
@@ -30,14 +28,11 @@ gulp.task('watch-sass', function() {
 
 
 /************************************************
-* - sassのコンパイル
-* - styleguideの生成
-* - jadeのコンパイル
-* - ライブリロード
+* sass, jadeのコンパイルとライブリロード
 ************************************************/
 gulp.task('watch-sass-jade', function() {
   $.watch(conf.sass.src, function() {
-    gulp.start([conf.sass.taskName, conf.sass.styleguide.taskName.base]);
+    gulp.start([conf.sass.taskName]);
   });
   $.watch(conf.jade.src, function() {
     gulp.start([conf.jade.taskName]);
@@ -49,15 +44,11 @@ gulp.task('watch-sass-jade', function() {
 
 
 /************************************************
-* - sassのコンパイル
-* - styleguideの生成
-* - jadeのコンパイル
-* - SFTPによる差分アップデート
-* - ライブリロード
+* sass, jadeのコンパイルとSFTPによる差分アップデートおよびライブリロード
 ************************************************/
 gulp.task('watch-sass-jade-sftp', function() {
   $.watch(conf.sass.src, function() {
-    gulp.start([conf.sass.taskName, conf.sass.styleguide.taskName.base]);
+    gulp.start([conf.sass.taskName]);
   });
   $.watch(conf.jade.src, function() {
     gulp.start([conf.jade.taskName]);

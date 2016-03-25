@@ -11,7 +11,7 @@ module.exports = {
    ************************************************/
   sass: {
     taskName: 'sass',
-    src: baseConf.srcDir + 'scss/**/*.scss', // v2.xでは、glob pattern (source/**/*.scss)はコンパイルされ、ディレクトリ指定は無効に
+    src:  baseConf.srcDir + 'scss/**/*.scss',
     dest: baseConf.distDir + 'common/css/',
     sassOption: {
       style: 'expanded',  // nested, expanded, compact, compressed
@@ -27,23 +27,6 @@ module.exports = {
     srcCopy: {
       use: false,
       dest: baseConf.distDir + 'common/scss/'
-    },
-    // sc5-styleguideを使用
-    styleguide: {
-      use: true,
-      taskName: {
-        base: 'guide',
-        generate: 'guide:generate',
-        apply: 'guide:apply'
-      },
-      options: {
-        title: 'My Styleguide',
-        server: true,
-        port: 9000, // localhost:portでstyleguideにアクセスできる
-        rootPath: 'styleguide/html/',
-        overviewPath: 'styleguide/overview.md'
-      },
-      dest: 'styleguide/html/'
     }
   },
 
@@ -86,7 +69,7 @@ module.exports = {
     },
     // use: trueでinit, ssiは無視される
     proxy: {
-      use: false,
+      use: true,
       proxy: "192.168.33.40/php/test/",  // .sftpconfig.jsonのremotePathと合わせる
       open: false,
       notify: false,
@@ -159,8 +142,7 @@ module.exports = {
     // 依存関係は考慮していないのでタイミングによっては無駄なタスクが走る場合がある
     // 各taskNameをプロパティに指定
     tasks: {
-      sass: true,
-      guide: true, // use:trueになっている必要がある
+      sass: false,
       jade: false,
       'sftp:all': false,
       watch: true
