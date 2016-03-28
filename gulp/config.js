@@ -37,10 +37,9 @@ module.exports = {
     },
     csscomb: false,
     // sassファイルをdestとは別にコピーしたいときに使用
-    srcCopy: {
-      use: false,
-      dest: baseConf.distDir + 'common/scss/'
-    }
+    sassCopy: false,  // or baseConf.distDir + 'common/scss/'
+    // コンパイルしたcssをkssで読み込む用に、kssのドキュメントルート以下にコピー
+    cssCopyToKss: './kss/html/'
   },
 
 
@@ -62,7 +61,7 @@ module.exports = {
       destination: './kss/html/',
       template: './kss/template/',
       mdFile: '../../kss/styleguide-intro.md',
-      cssfile: '/' + baseConf.distDir + 'common/css/style.css'  // sassコンパイルされたcssをmy-gulp-starterからの絶対パスで読み込む
+      cssfile: 'style.css'  // /kss/html/を基準としたパスになる（上記のcssCopyToKssで生成したファイルへのリンク）
     }
   },
 

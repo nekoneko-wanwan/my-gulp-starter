@@ -3,13 +3,14 @@ var gulp = require('gulp'),
     conf = require('../config').sass;
 
 gulp.task(conf.taskName, function () {
-  if (conf.srcCopy.use === true) {
-    gulp.src(conf.src).pipe(gulp.dest(conf.srcCopy.dest));
+  if (conf.sassCopy !== false) {
+    gulp.src(conf.src).pipe(gulp.dest(conf.sassCopy));
   }
 
   return $.rubySass(conf.src, conf.sassOption)
     .pipe($.if(conf.autoprefixer, $.autoprefixer(conf.autoprefixer)))
     .pipe($.if(conf.csscomb, $.csscomb()))
-    .pipe(gulp.dest(conf.dest));
+    .pipe(gulp.dest(conf.dest))
+    .pipe(gulp.dest(conf.cssCopyToKss));
 });
 
