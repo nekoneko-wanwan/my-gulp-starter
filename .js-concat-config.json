@@ -1,0 +1,8 @@
+{
+  "srcList": [
+    "./src/js/vendor/01.js",
+    "./src/js/vendor/02.js"
+  ],
+  "concatName": "init.min.js",
+  "dest": "./html/common/js/"
+}

@@ -5,12 +5,14 @@ var baseConf = {
         sass: 'sass',
         kssGuide: 'guide',
         jade: 'jade',
+        js: 'js',
         bsServer: 'server',
         bsReload: 'reload',
         sftp: 'sftp:all',
         clean: 'clean',
         watch: 'watch',
       },
+      jsconfig: './.js-concat-config.json',  // jsを結合する場合の設定情報
       sftpconfig: './.sftpconfig.json'  // SFTPを使用する場合のサーバの接続情報
     };
 // ショートハンド
@@ -79,6 +81,17 @@ module.exports = {
     jadeOption: {
       pretty: true
     }
+  },
+
+
+  /************************************************
+   * js Concat
+   ************************************************/
+  js: {
+    taskName: n.js,
+    src: baseConf.jsconfig,
+    jsCopy: baseConf.distDir + 'common/js/pre_concat/', // or false, concatする前のファイルをコピーする
+    uglify: true
   },
 
 
@@ -152,7 +165,8 @@ module.exports = {
     taskName: n.clean,
     targetPath: [
       baseConf.distDir + 'common/scss/',
-      baseConf.distDir + 'common/css/'
+      baseConf.distDir + 'common/css/',
+      baseConf.distDir + 'common/js/pre_concat/'
     ]
   },
 
@@ -179,6 +193,7 @@ module.exports = {
       [n.sass]: true,
       [n.kssGuide]: true,
       [n.jade]: false,
+      [n.js]: true,
       [n.sftp]: false,
       [n.watch]: true
     }
