@@ -3,7 +3,10 @@ var baseConf = {
       distDir: 'html/',
       taskName: {
         sass: 'sass',
-        kssGuide: 'guide',
+        kss: {
+          compile: 'kss:compile',
+          server: 'kss:server'
+        },
         jade: 'jade',
         js: 'js',
         bsServer: 'server',
@@ -49,23 +52,21 @@ module.exports = {
    * kss guide
    * watchには含めない（sassでコンパイルされたcssを直接見ているので手でリロードすれば反映される）
    ************************************************/
-  guide: {
-    taskName: n.kssGuide,
-    cmd: [
-      // kss-node compile
-      'kss-node <%= source %> --homepage <%= mdFile%> <%= destination %> --template <%= template%> --css <%= cssfile %>',
-      // kss用server build (my-gulp-starterがドキュメントルートとなる)
-      // 'localhost/kss/html/'にアクセスするとスタイルガイドが見れる
-      'http-server -p 9000 --silent'
-    ],
-    templateData: {
-      source: baseConf.srcDir + 'scss/',
-      destination: './kss/html/',
-      template: './kss/template/',
-      mdFile: '../../kss/styleguide-intro.md',
-      cssfile: 'style.css'  // /kss/html/を基準としたパスになる（上記のcssCopyToKssで生成したファイルへのリンク）
-    }
-  },
+   kss: {
+     taskName: n.kss,
+     // kss-node compile
+     compileCmd: 'kss-node <%= source %> --homepage <%= mdFile%> <%= destination %> --template <%= template%> --css <%= cssfile %>',
+     // kss用server build (my-gulp-starterがドキュメントルートとなる)
+     // 'localhost/kss/html/'にアクセスするとスタイルガイドが見れる
+     serverBuildCmd: 'http-server -p 9000 --silent',
+     templateData: {
+       source: baseConf.srcDir + 'scss/',
+       destination: './kss/html/',
+       template: './kss/template/',
+       mdFile: '../../kss/styleguide-intro.md',
+       cssfile: 'style.css'  // /kss/html/を基準としたパスになる（上記のcssCopyToKssで生成したファイルへのリンク）
+     }
+   },
 
 
   /************************************************
@@ -191,7 +192,7 @@ module.exports = {
     // 依存関係は考慮していないのでタイミングによっては無駄なタスクが走る場合がある
     tasks: {
       [n.sass]: true,
-      [n.kssGuide]: true,
+      [n.kss.server]: true,
       [n.jade]: false,
       [n.js]: true,
       [n.sftp]: false,

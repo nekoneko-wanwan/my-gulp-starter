@@ -25,6 +25,9 @@ gulp.task('watch-sass', function() {
   $.watch(conf.browserSync.reload.watchPath, function() {
     gulp.start([conf.browserSync.reload.taskName]);
   });
+  $.watch(conf.sass.cssCopyToKss + '*.css', function() {
+    gulp.start([conf.kss.taskName.compile]);
+  });
 });
 
 
