@@ -36,11 +36,17 @@ module.exports = {
       stopOnError: false,
       cacheLocation: './.sass-cache'  // 最上位のgulpfile.jsから見た位置になる
     },
-    autoprefixer: {
-      browsers: ['last 2 versions', 'ie 9', 'ios 6', 'android 4'],
-      cascade: false
+    pleeease: {
+      autoprefixer: {
+        browsers: ['last 2 versions', 'ie 9', 'ios 6', 'android 4'],
+      },
+      filters: false,
+      rem: false,  // mixinで対応
+      pseudoElements: false,
+      opacity: false,
+      minifier: false // minify無効
     },
-    csscomb: false,
+    csscomb: false,  // minifyを有効にしていても上書きするので注意
     // sassファイルをdestとは別にコピーしたいときに使用
     sassCopy: false,  // or baseConf.distDir + 'common/scss/'
     // コンパイルしたcssをkssで読み込む用に、kssのドキュメントルート以下にコピー

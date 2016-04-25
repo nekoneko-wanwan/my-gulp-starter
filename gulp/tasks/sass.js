@@ -8,7 +8,7 @@ gulp.task(conf.taskName, function () {
   }
 
   return $.rubySass(conf.src, conf.sassOption)
-    .pipe($.if(conf.autoprefixer, $.autoprefixer(conf.autoprefixer)))
+    .pipe($.pleeease(conf.pleeease))
     .pipe($.if(conf.csscomb, $.csscomb()))
     .pipe(gulp.dest(conf.dest))
     .pipe(gulp.dest(conf.cssCopyToKss));
