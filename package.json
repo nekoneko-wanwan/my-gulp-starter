@@ -14,6 +14,7 @@
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^3.1.0",
     "gulp-concat": "^2.6.0",
+    "gulp-cr-lf-replace": "0.0.4",
     "gulp-csscomb": "^3.0.6",
     "gulp-if": "^2.0.0",
     "gulp-jade": "^1.1.0",

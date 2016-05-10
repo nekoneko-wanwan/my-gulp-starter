@@ -36,6 +36,10 @@ module.exports = {
       stopOnError: false,
       cacheLocation: './.sass-cache'  // 最上位のgulpfile.jsから見た位置になる
     },
+    changeCode: { // 改行コードを強制変換する
+      isUse: true,
+      code: 'LF'
+    },
     pleeease: {
       autoprefixer: {
         browsers: ['last 2 versions', 'ie 9', 'ios 6', 'android 4'],
@@ -198,7 +202,7 @@ module.exports = {
     // 依存関係は考慮していないのでタイミングによっては無駄なタスクが走る場合がある
     tasks: {
       [n.sass]: true,
-      [n.kss.server]: true,
+      [n.kss.server]: false,
       [n.jade]: false,
       [n.js]: true,
       [n.sftp]: false,

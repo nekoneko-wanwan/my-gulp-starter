@@ -10,6 +10,7 @@ gulp.task(conf.taskName, function () {
   return $.rubySass(conf.src, conf.sassOption)
     .pipe($.pleeease(conf.pleeease))
     .pipe($.if(conf.csscomb, $.csscomb()))
+    .pipe($.if(conf.changeCode.isUse, $.crLfReplace({changeCode: conf.changeCode.code})))
     .pipe(gulp.dest(conf.dest))
     .pipe(gulp.dest(conf.cssCopyToKss));
 });
